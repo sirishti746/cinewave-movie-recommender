@@ -1,0 +1,73 @@
+// components/AddToPlaylistModal.jsx
+import React, { useState, useEffect } from "react";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import "./AddPlaylistModal.css";
+
+const AddToPlaylistModal = ({ movie, onClose }) => {
+  const [playlists, setPlaylists] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "playlists"));
+        const fetchedPlaylists = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setPlaylists(fetchedPlaylists);
+      } catch (err) {
+        console.error("Failed to fetch playlists:", err);
+      }
+    };
+
+    fetchPlaylists();
+  }, []);
+
+  const handleAddToPlaylist = async (playlistId, existingMovieIds) => {
+    if (existingMovieIds.includes(movie.id)) {
+      alert("Movie already in playlist!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const updatedMovieIds = [...existingMovieIds, movie.id];
+      const playlistRef = doc(db, "playlists", playlistId);
+      await updateDoc(playlistRef, { movieIds: updatedMovieIds });
+      alert("✅ Movie added to playlist!");
+      onClose();
+    } catch (err) {
+      console.error("Error adding movie to playlist:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!playlists.length) return null;
+
+  return (
+    <div className="add-movie-modal-overlay">
+      <div className="add-movie-modal">
+        <button className="close-btn" onClick={onClose}>✖</button>
+        <h2>Select a Playlist</h2>
+        <ul className="playlist-list">
+          {playlists.map((playlist) => (
+            <li key={playlist.id}>
+              <button
+                className="playlist-option-btn"
+                onClick={() => handleAddToPlaylist(playlist.id, playlist.movieIds || [])}
+                disabled={loading}
+              >
+                ➕ {playlist.name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default AddToPlaylistModal;

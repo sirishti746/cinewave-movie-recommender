@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/cinewave-movie-recommender/static/css/main.1eb4e666.css",
+    "main.js": "/cinewave-movie-recommender/static/js/main.209b7e4a.js",
+    "static/media/AddPlaylistModal": "/cinewave-movie-recommender/static/media/AddPlaylistModal.da8c44378e77c6e01fbd",
+    "index.html": "/cinewave-movie-recommender/index.html",
+    "main.1eb4e666.css.map": "/cinewave-movie-recommender/static/css/main.1eb4e666.css.map",
+    "main.209b7e4a.js.map": "/cinewave-movie-recommender/static/js/main.209b7e4a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1eb4e666.css",
+    "static/js/main.209b7e4a.js"
+  ]
+}
